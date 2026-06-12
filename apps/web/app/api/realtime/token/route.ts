@@ -14,17 +14,14 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // JWT for Centrifugo — sub = userId
   const token = await new jose.SignJWT({
     sub: session.user.id,
-    // معلومات إضافية يقدر Centrifugo يستخدمها
     info: {
       name: session.user.name,
-      workspaceId: session.user.workspaceId,
     },
   })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("1h")   // token يتجدد كل ساعة
+    .setExpirationTime("1h")
     .setIssuedAt()
     .sign(CENTRIFUGO_SECRET);
 

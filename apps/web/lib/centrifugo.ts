@@ -49,12 +49,20 @@ export async function batchPublish(
     params: msg,
   }));
 
-  await fetch(`${CENTRIFUGO_API_URL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-API-Key": CENTRIFUGO_API_KEY,
-    },
-    body: JSON.stringify(commands),
-  });
+  try {
+    const response = await fetch(`${CENTRIFUGO_API_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": CENTRIFUGO_API_KEY,
+      },
+      body: JSON.stringify(commands),
+    });
+
+    if (!response.ok) {
+      console.error("Centrifugo batch publish failed:", await response.text());
+    }
+  } catch (error) {
+    console.error("Centrifugo batch publish error:", error);
+  }
 }

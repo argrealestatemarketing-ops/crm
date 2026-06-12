@@ -3,11 +3,11 @@
     "name": "CRM Mobile",
     "slug": "crm-mobile",
     "version": "1.0.0",
-    "sdkVersion": "50.0.0",
+    "scheme": "crm-mobile",
     "platforms": ["ios", "android", "web"],
     "orientation": "portrait",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": false
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
