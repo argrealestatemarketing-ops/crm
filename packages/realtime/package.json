@@ -1,0 +1,14 @@
+{
+  "name": "@crm/realtime",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
