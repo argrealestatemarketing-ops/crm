@@ -253,7 +253,10 @@ export async function smartAssignLeads() {
     if (l.assignedToId && loadMap.has(l.assignedToId)) loadMap.set(l.assignedToId, Number(l.c))
   }
 
+  // Batch assignment: group leads by assigned member to avoid N+1 updates
   const now = new Date()
+  const assignmentsByMember = new Map<string, number[]>()
+  
   for (const lead of pool) {
     // Pick the member with the smallest current load.
     let best = members[0]
@@ -265,12 +268,23 @@ export async function smartAssignLeads() {
         bestLoad = load
       }
     }
-    await db
-      .update(leads)
-      .set({ assignedToId: best.id, assignedToName: best.name, assignedAt: now })
-      .where(eq(leads.id, lead.id))
+    
+    if (!assignmentsByMember.has(best.id)) {
+      assignmentsByMember.set(best.id, [])
+    }
+    assignmentsByMember.get(best.id)!.push(lead.id)
     loadMap.set(best.id, bestLoad + 1)
   }
+
+  // Execute batch updates
+  for (const [memberId, leadIds] of assignmentsByMember) {
+    const memberName = members.find(m => m.id === memberId)?.name ?? ""
+    await db
+      .update(leads)
+      .set({ assignedToId: memberId, assignedToName: memberName, assignedAt: now })
+      .where(sql`${leads.id} = ANY(${leadIds}::int[])`)
+  }
+  
   revalidatePath("/leads")
   revalidatePath("/pipeline")
   return { success: true, assigned: pool.length }

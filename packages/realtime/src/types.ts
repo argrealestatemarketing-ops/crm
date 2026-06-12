@@ -1,4 +1,4 @@
-import type { LeadDTO, UserDTO } from "@crm/shared-lib/types";
+import type { LeadDTO, UserDTO } from "@crm/shared-lib";
 
 // كل event ليه payload type محدد
 export interface LeadCreatedPayload {
@@ -29,7 +29,7 @@ export interface ChatMessagePayload {
   id: string;
   roomId: string;
   content: string;
-  sender: Pick<UserDTO, "id" | "name" | "avatarUrl">;
+  sender: Pick<UserDTO, "id" | "name" | "image">;
   sentAt: string;
 }
 

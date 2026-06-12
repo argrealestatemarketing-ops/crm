@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { Centrifuge } from "centrifuge";
+import type { PublicationContext, SubscribedContext } from "centrifuge";
 import type { EventName, EventPayloadMap } from "@crm/realtime";
 
 const CENTRIFUGO_URL =
@@ -41,7 +42,7 @@ export function useRealtimeChannel<E extends EventName>(
       // recover: true ← Centrifugo يسترجع الرسائل الفايتة تلقائياً
     });
 
-    sub.on("publication", (ctx) => {
+    sub.on("publication", (ctx: PublicationContext) => {
       const { event: receivedEvent, payload } = ctx.data;
       if (receivedEvent === event) {
         handlerRef.current(payload);
@@ -49,7 +50,7 @@ export function useRealtimeChannel<E extends EventName>(
     });
 
     // هنا بيحصل الـ recovery — لو كان offline هيجيب الرسائل الفايتة
-    sub.on("subscribed", (ctx) => {
+    sub.on("subscribed", (ctx: SubscribedContext) => {
       if (ctx.wasRecovering && !ctx.recovered) {
         // الرسائل فاتت أكثر من الـ history — reload من API
         console.warn("State lost, need full refresh");

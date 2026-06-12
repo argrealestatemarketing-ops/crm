@@ -1,4 +1,4 @@
-export type LeadStage = "New" | "Contacted" | "FollowUp" | "Meeting" | "Negotiation" | "Won" | "Lost";
+export type LeadStage = "New" | "Assigned" | "Contacted" | "FollowUp" | "Meeting" | "Negotiation" | "Won" | "Lost";
 
 export interface LeadDTO {
   id: number;

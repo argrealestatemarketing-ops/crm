@@ -1,6 +1,5 @@
 import "server-only";
-import { db } from "@crm/db";
-import { userPermissions, auditLogs } from "@crm/db";
+import { getDb, userPermissions, auditLogs } from "@crm/db";
 import { and, eq } from "drizzle-orm";
 import { PERMISSION_KEYS, type PermissionKey, PERMISSION_LABELS, AUDIT_ACTION_LABELS } from "./permission-constants";
 
@@ -8,6 +7,8 @@ export { PERMISSION_KEYS, PERMISSION_LABELS, AUDIT_ACTION_LABELS, type Permissio
 
 export async function getUserPermissions(userId: string, role: string): Promise<Set<PermissionKey>> {
   if (role === "admin") return new Set(PERMISSION_KEYS);
+  
+  const db = getDb();
   const rows = await db.select().from(userPermissions).where(eq(userPermissions.userId, userId));
   const granted = new Set<PermissionKey>();
   for (const r of rows) {
@@ -20,6 +21,7 @@ export async function getUserPermissions(userId: string, role: string): Promise<
 
 export async function hasPermission(userId: string, role: string, key: PermissionKey): Promise<boolean> {
   if (role === "admin") return true;
+  const db = getDb();
   const rows = await db
     .select()
     .from(userPermissions)
@@ -37,6 +39,7 @@ export async function logAudit(input: {
   details?: string;
 }): Promise<void> {
   try {
+    const db = getDb();
     await db.insert(auditLogs).values({
       userId: input.userId ?? null,
       userName: input.userName ?? null,

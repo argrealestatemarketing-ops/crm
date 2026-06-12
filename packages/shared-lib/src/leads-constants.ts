@@ -2,6 +2,7 @@ export type Bilingual = { value: string; ar: string; en: string };
 
 export const PIPELINE_STAGES: Bilingual[] = [
   { value: "New", ar: "جديد", en: "New" },
+  { value: "Assigned", ar: "مُعين", en: "Assigned" },
   { value: "Contacted", ar: "تم التواصل", en: "Contacted" },
   { value: "FollowUp", ar: "متابعة", en: "Follow Up" },
   { value: "Meeting", ar: "اجتماع", en: "Meeting" },
@@ -12,6 +13,7 @@ export const PIPELINE_STAGES: Bilingual[] = [
 
 export const STAGE_STYLES: Record<string, { dot: string; badge: string }> = {
   New: { dot: "bg-sky-500", badge: "bg-sky-100 text-sky-700" },
+  Assigned: { dot: "bg-cyan-500", badge: "bg-cyan-100 text-cyan-700" },
   Contacted: { dot: "bg-indigo-500", badge: "bg-indigo-100 text-indigo-700" },
   FollowUp: { dot: "bg-amber-500", badge: "bg-amber-100 text-amber-700" },
   Meeting: { dot: "bg-violet-500", badge: "bg-violet-100 text-violet-700" },

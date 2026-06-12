@@ -1,6 +1,5 @@
 import { betterAuth } from "better-auth";
-import { pool, db } from "@crm/db";
-import { user as userTable } from "@crm/db";
+import { getDb, getPool, user as userTable } from "@crm/db";
 import { sql } from "drizzle-orm";
 
 const authSecret = process.env.BETTER_AUTH_SECRET ?? process.env.AUTH_SECRET;
@@ -11,11 +10,12 @@ if (!authSecret && !process.env.BETTER_AUTH_SECRETS) {
 }
 
 export const auth = betterAuth({
-  database: pool,
+  database: getPool(),
   databaseHooks: {
     user: {
       create: {
         before: async (newUser) => {
+          const db = getDb();
           const [{ count }] = await db
             .select({ count: sql<number>`count(*)::int` })
             .from(userTable);

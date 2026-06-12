@@ -2,7 +2,13 @@
 import type { EventName, EventPayloadMap } from "@crm/realtime";
 
 const CENTRIFUGO_API_URL = process.env.CENTRIFUGO_API_URL || "http://localhost:8000/api";
-const CENTRIFUGO_API_KEY = process.env.CENTRIFUGO_API_KEY!;
+
+if (!process.env.CENTRIFUGO_API_KEY) {
+  console.error(
+    "CENTRIFUGO_API_KEY is not set — real-time publishing will fail. Set it in .env.local"
+  );
+}
+const CENTRIFUGO_API_KEY = process.env.CENTRIFUGO_API_KEY ?? "";
 
 interface PublishOptions<E extends EventName> {
   channel: string;

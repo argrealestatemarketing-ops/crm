@@ -1,6 +1,5 @@
 import { auth } from "@crm/auth";
-import { db } from "@crm/db";
-import { user as userTable } from "@crm/db";
+import { getDb, user as userTable } from "@crm/db";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
@@ -17,6 +16,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) return null;
 
+  const db = getDb();
   const rows = await db.select().from(userTable).where(eq(userTable.id, session.user.id)).limit(1);
   const u = rows[0];
   if (!u) return null;

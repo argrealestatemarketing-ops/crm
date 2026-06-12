@@ -1,3 +1,3 @@
-export { db, pool } from "./connection";
+export { getDb, getPool, db } from "./connection";
 export type { DB } from "./connection";
-export * from "./schema";
+export * from "./connection"; // Re-exports schema types
